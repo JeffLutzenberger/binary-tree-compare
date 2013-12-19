@@ -144,11 +144,11 @@ if __name__ == "__main__":
     bfs_tree(tree2)
     print "DFS Tree2"
     dfs_tree(tree2)
-    print "Tree compare should be False"
-    print bfs_compare_tree(tree1, tree2)
-    print "Tree compare should be True"
-    print bfs_compare_tree(tree1, tree1)
-    print "Recursive compare should be False"
-    print recursive_compare(tree1, tree2)
-    print "Recursive compare should be True"
-    print recursive_compare(tree1, tree1)
+    print "BFS tree compare not equal...ok"
+    assert(bfs_compare_tree(tree1, tree2) is False)
+    print "BFS tree compare equal...ok"
+    assert(bfs_compare_tree(tree1, tree1))
+    print "Recursive tree compare not equal...ok"
+    assert(recursive_compare(tree1, tree2) is False)
+    print "Recursive tree compare equal...ok"
+    assert(recursive_compare(tree1, tree1))
