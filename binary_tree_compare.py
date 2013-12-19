@@ -9,6 +9,20 @@ Check 2 binary trees for equality
  / \      \
 n4  n5     n6
 
+    n1
+   /  \
+  n2    n3
+ /
+n4
+
+    n1
+   /  \
+  n2    n3
+   \
+    n4
+
+
+
 """
 import collections
 
@@ -34,11 +48,33 @@ def make_tree(drop_last=False):
     n2.right = n5
     n2.val = 2
     if not drop_last:
-        n3.right = n6
+        n3.left = n6
+#    else:
+#        n3.right = n6
     n3.val = 3
     n4.val = 4
     n5.val = 5
     n6.val = 6
+
+    return n1
+
+
+def make_tree2(drop_last=False):
+    n1 = Node()
+    n2 = Node()
+    n3 = Node()
+    n4 = Node()
+
+    n1.left = n2
+    n1.right = n3
+    n1.val = 1
+    if drop_last:
+        n2.right = n4
+    else:
+        n2.left = n4
+    n2.val = 2
+    n3.val = 3
+    n4.val = 4
 
     return n1
 
@@ -75,27 +111,35 @@ def bfs_compare_tree(tree1, tree2):
     while len(queue1) and len(queue2):
         n1 = queue1.popleft()
         n2 = queue2.popleft()
-        if n1.val != n2.val:
+        if n1 != n2:
             return False
-        if n1.left:
-            queue1.append(n1.left)
-        if n1.right:
-            queue1.append(n1.right)
-        if n2.left:
-            queue2.append(n2.left)
-        if n2.right:
-            queue2.append(n2.right)
-        if len(queue1) != len(queue2):
+        if not n1 and not n2:
+            break
+        if n1 and n2 and n1.val != n2.val:
             return False
+        queue1.append(n1.left)
+        queue2.append(n2.left)
+        queue1.append(n1.right)
+        queue2.append(n2.right)
     return True
 
+
+def recursive_compare(tree1, tree2):
+    if not tree1 or not tree2:
+        return tree1 == tree2
+    if tree1.val != tree2.val:
+        return False
+    return (recursive_compare(tree1.left, tree2.left) and
+            recursive_compare(tree1.right, tree2.right))
+
+
 if __name__ == "__main__":
-    tree1 = make_tree()
+    tree1 = make_tree2()
     print "BFS Tree1"
     bfs_tree(tree1)
     print "DFS Tree1"
     dfs_tree(tree1)
-    tree2 = make_tree(True)
+    tree2 = make_tree2(True)
     print "BFS Tree2"
     bfs_tree(tree2)
     print "DFS Tree2"
@@ -104,3 +148,7 @@ if __name__ == "__main__":
     print bfs_compare_tree(tree1, tree2)
     print "Tree compare should be True"
     print bfs_compare_tree(tree1, tree1)
+    print "Recursive compare should be False"
+    print recursive_compare(tree1, tree2)
+    print "Recursive compare should be True"
+    print recursive_compare(tree1, tree1)
